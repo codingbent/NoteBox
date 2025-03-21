@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const mongouri = "mongodb://localhost:27017/inotebook"; // Replace 'inotebook' with your database name
+const mongouri = "mongodb://localhost:27017/"; // Replace 'inotebook' with your database name
 
 const connectToMongo = () => {
   mongoose.connect(mongouri)

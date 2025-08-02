@@ -3,8 +3,8 @@ const router =express.Router();
 const User = require('../models/User');
 const { body, validationResult } = require('express-validator');
 const bcrypt =require('bcryptjs');
-const jwt=require('jsonwebtoken');
-
+var jwt=require('jsonwebtoken');
+var fetchuser=require('../middleware/fetchuser');
 const JWT_SECRET="abhedagarwal%male";
 
 
@@ -85,10 +85,11 @@ router.post('/login',[
     }
 })
 //ROUTE 3: Get logged in details using POST"/api/auth/"
-router.post('./getuser',fetchuser,async(req,res)=>{
+router.post('/getuser',fetchuser,async(req,res)=>{
     try{
-        userId="todo";
-        const user=await User.findById(userId).select("-password")
+        userId=req.user.id;
+        const user=await User.findById(userId).select("-password");
+        res.send(user);
     }
     catch(error){
         console.error(e.message);

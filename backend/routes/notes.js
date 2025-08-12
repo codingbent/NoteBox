@@ -71,7 +71,7 @@ router.put('/updatenote/:id',fetchuser,async(req,res)=>{
    
 })
 
-router.get('/deletenote/:id',fetchuser,async(req,res)=>{
+router.delete('/deletenote/:id',fetchuser,async(req,res)=>{
     try {
         let note=await Note.findById(req.params.id);
     if(!note){

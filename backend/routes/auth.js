@@ -20,7 +20,7 @@ router.post('/createuser',[
         return res.status(400).json({errors:errors.array()});
     } 
 
-    console.log(req.body.email);
+    // console.log(req.body.email);
     
     try
     {let user =await User.findOne({email: req.body.email});

@@ -56,20 +56,26 @@ router.post('/login',[
     body('password','Enter a password').exists(),
     body('email','Enter a valid email').isEmail(),
 ],async (req,res)=>{
+    var success=false;
     const errors =validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).json({errors:errors.array()});
     } 
 
     const {email,password}=req.body;
+    console.log(User.password);
+    
     try{
         let user=await User.findOne({email});
         if(!user){
             return res.status(400).json({error:"Sorry Enter correct credentials"});
         }
-        const passwordcompare=bcrypt.compare(password,user.password);
+        const passwordcompare=await bcrypt.compare(password,user.password);
+        console.log(passwordcompare);
+        
         if(!passwordcompare){
-            return res.status(400).json({error:"Sorry Enter correct credentials"});
+            success=false;
+            return res.status(400).json({success,error:"Sorry Enter correct credentials"});
         }
         const payload={
             user:{
@@ -77,7 +83,8 @@ router.post('/login',[
             }
         }
         const authtoken=jwt.sign(payload,JWT_SECRET);
-        res.json({authtoken});
+        success=true;
+        res.json({success,authtoken});
     }
     catch(e){
         console.error(e.message);
@@ -87,9 +94,10 @@ router.post('/login',[
 //ROUTE 3: Get logged in details using POST"/api/auth/"
 router.post('/getuser',fetchuser,async(req,res)=>{
     try{
-        userId=req.user.id;
-        const user=await User.findById(userId).select("-password");
+        user=req.user.id;
+        const user=await User.findById(user).select("-password");
         res.send(user);
+        
     }
     catch(error){
         console.error(e.message);

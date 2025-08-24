@@ -1,13 +1,13 @@
 const express = require("express");
 const router = express.Router();
 var fetchuser = require("../middleware/fetchuser");
-const Notes = require("../models/Note");
+// const Notes = require("../models/Note");
 const { body, validationResult } = require("express-validator");
 const Note = require("../models/Note");
 
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
     try {
-        const notes = await Notes.find({ user: req.user.id });
+        const notes = await Note.find({ user: req.user.id });
         res.json(notes);
     } catch (error) {
         console.error(error.message);
@@ -20,7 +20,7 @@ router.post(
     fetchuser,
     [
         body("title").isLength({ min: 3 }),
-        body("description").isLength({ min: 8 }),
+        body("description").isLength({ min: 5 }),
     ],
     async (req, res) => {
         try {

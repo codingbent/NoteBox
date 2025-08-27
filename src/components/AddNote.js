@@ -19,7 +19,7 @@ const AddNote = () => {
             <h1>Add a note</h1>
             <form className="container my-3" onSubmit={handleClick}>
                 <div className="mb-3">
-                    <label htmlhtmlFor="title" className="form-label">
+                    <label htmlFor="title" className="form-label">
                         Title
                     </label>
                     <input
@@ -35,7 +35,7 @@ const AddNote = () => {
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlhtmlFor="description" className="form-label">
+                    <label htmlFor="description" className="form-label">
                         Description
                     </label>
                     <input
@@ -51,7 +51,7 @@ const AddNote = () => {
                     />
                 </div>
                 <div className="mb-3">
-                    <label htmlhtmlFor="tag" className="form-label">
+                    <label htmlFor="tag" className="form-label">
                         Tag
                     </label>
                     <input

@@ -15,9 +15,10 @@ router.post('/createuser',[
     body('password').isLength({min: 8}),
     body('email').isEmail(),
 ],async (req,res)=>{
+    var success=false;
     const errors =validationResult(req);
     if(!errors.isEmpty()){
-        return res.status(400).json({errors:errors.array()});
+        return res.status(400).json({success,errors:errors.array()});
     } 
 
     // console.log(req.body.email);
@@ -25,7 +26,7 @@ router.post('/createuser',[
     try
     {let user =await User.findOne({email: req.body.email});
     if(user){
-        return res.status(400).json({errors:"Sorry user exists"});
+        return res.status(400).json({success:false,errors:"Sorry user exists"});
     }
 
     const salt=await bcrypt.genSalt(10);
@@ -42,12 +43,12 @@ router.post('/createuser',[
     }
     const authtoken=jwt.sign(data,JWT_SECRET);
     console.log(authtoken);
-    
-    res.json({authtoken});
+    success=true;
+    res.json({success,authtoken});
 }
     catch(error){
         console.error(error.message);
-        res.status(500).send("Internal server error");
+        res.status(500).json(success,"Internal server error");
     }
 })
 //CREATE A USER USING : POST "/API/AUTH" Doesn't require auth

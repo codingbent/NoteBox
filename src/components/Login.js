@@ -1,7 +1,7 @@
-import React,{useState,useHistory} from 'react'
-
+import React,{useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 const Login = () => {
-    let history=useHistory();
+    let navigate=useNavigate();
     const [details, setDetails] = useState({
             email:"",
             password:""
@@ -20,6 +20,7 @@ const Login = () => {
             console.log(json);
             if(json.success){
                 localStorage.setItem('token',json.authtoken);
+                navigate("/");
             }
             else{
                 alert("Enter correct credentials");

@@ -76,7 +76,7 @@ const Notes = () => {
                                 <form className="container my-3">
                                     <div className="mb-3">
                                         <label
-                                            htmlhtmlFor="title"
+                                            htmlFor="title"
                                             className="form-label"
                                         >
                                             Title
@@ -93,7 +93,7 @@ const Notes = () => {
                                     </div>
                                     <div className="mb-3">
                                         <label
-                                            htmlhtmlFor="description"
+                                            htmlFor="description"
                                             className="form-label"
                                         >
                                             Description
@@ -110,7 +110,7 @@ const Notes = () => {
                                     </div>
                                     <div className="mb-3">
                                         <label
-                                            htmlhtmlFor="tag"
+                                            htmlFor="tag"
                                             className="form-label"
                                         >
                                             Tag

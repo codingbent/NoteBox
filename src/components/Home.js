@@ -1,8 +1,8 @@
 import Notes from "./Notes";
  
-export default function Home() {
-
+export const Home=(props)=> {
+    const {showAlert}=props
     return (
-       <Notes/>
+       <Notes showAlert={showAlert}/>
     );
 }

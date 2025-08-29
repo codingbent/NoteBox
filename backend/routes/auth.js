@@ -89,6 +89,8 @@ router.post('/login',[
     }
     catch(e){
         console.error(e.message);
+        console.log(e.message);
+        
         res.status(500).send("Internal server error");
     }
 })
@@ -101,7 +103,7 @@ router.post('/getuser',fetchuser,async(req,res)=>{
         
     }
     catch(error){
-        console.error(e.message);
+        console.error(error.message);
         res.status(500).send("Internal server error");
     }
 })

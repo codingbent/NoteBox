@@ -17,7 +17,7 @@ const NoteState = (props) => {
             },
         });
         const json = await response.json();
-        console.log(json);
+        //console.log(json);
         setNotes(json);
     };
     const addNote = async (title, description, tag) => {
@@ -59,7 +59,7 @@ const NoteState = (props) => {
         setNotes(newnotes);
     };
     const deleteNote = async (id) => {
-        console.log("Deleting the note", id);
+        //console.log("Deleting the note", id);
         const url = `${host}/api/notes/deletenote/${id}`;
         const response = await fetch(url, {
             method: "DELETE",

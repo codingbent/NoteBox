@@ -38,7 +38,7 @@ router.post(
 
             const savednote = await note.save();
             res.json(savednote);
-            console.log(savednote);
+            //console.log(savednote);
             
         } catch (error) {
             console.error(error.message);

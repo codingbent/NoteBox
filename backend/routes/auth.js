@@ -44,7 +44,7 @@ router.post(
                 },
             };
             const authtoken = jwt.sign(data, JWT_SECRET);
-            console.log(authtoken);
+            //console.log(authtoken);
             success = true;
             res.json({ success, authtoken });
         } catch (error) {
@@ -69,7 +69,7 @@ router.post(
         }
 
         const { email, password } = req.body;
-        console.log(User.password);
+        //console.log(User.password);
 
         try {
             let user = await User.findOne({ email });
@@ -82,7 +82,7 @@ router.post(
                 password,
                 user.password
             );
-            console.log(passwordcompare);
+            //console.log(passwordcompare);
 
             if (!passwordcompare) {
                 success = false;
@@ -108,7 +108,7 @@ router.post(
             });
         } catch (e) {
             console.error(e.message);
-            console.log(e.message);
+            //console.log(e.message);
 
             res.status(500).send("Internal server error");
         }

@@ -1,7 +1,16 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-const Navbar = () => {
+import { Link, useLocation,useNavigate } from "react-router-dom";
+const Navbar = (props) => {
     let location = useLocation();
+    let navigator=useNavigate();
+    if(localStorage.getItem('token')){
+        console.log(localStorage.getItem('token'));
+    }
+    const handlelogout=()=>{
+        localStorage.removeItem('token')
+        navigator("/login");
+        props.showAlert("Successfully Logged Out","success")
+    }
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
@@ -46,6 +55,8 @@ const Navbar = () => {
                             </Link>
                         </li>
                     </ul>
+                    {localStorage.getItem('token')==null
+                    ?
                     <form className="d-flex">
                         <Link className="btn btn-primary mx-2" to="/login" role="button">
                             Login
@@ -54,6 +65,19 @@ const Navbar = () => {
                             Sign Up
                         </Link>
                     </form>
+                    :
+                    <>
+                       <div className="d-flex align-items-center gap-2">
+                            <span className="text-light fw-semibold">
+                                👤 {localStorage.getItem("name")}
+                            </span>
+                            <button className="btn btn-sm btn-outline-light rounded-pill px-3" onClick={handlelogout}>
+                                Logout
+                            </button>
+                        </div>
+                    </>
+                    
+                    }
                 </div>
             </div>
         </nav>

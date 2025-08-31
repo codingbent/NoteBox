@@ -3,10 +3,10 @@ const About = () => {
         <div>
             <section class="container py-4" aria-labelledby="about-title">
                 <h1 id="about-title" class="mb-3">
-                    📒 About iNotebook
+                    📒 About NoteBox
                 </h1>
                 <p>
-                    iNotebook is a simple and secure notes app built as part of
+                    NoteBox is a simple and secure notes app built as part of
                     my learning journey in
                     <strong> React.js ⚛️</strong>,{" "}
                     <strong>authentication 🔐</strong>, and

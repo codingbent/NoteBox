@@ -12,7 +12,7 @@ const Navbar = (props) => {
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">
-                    iNoteBook
+                    NoteBox
                 </Link>
                 <button
                     className="navbar-toggler"

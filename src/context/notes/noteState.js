@@ -1,56 +1,86 @@
-import React,{useState} from 'react'
-import {useNavigate} from 'react-router-dom'
-const Login = (props) => {
-    
-    let navigate=useNavigate();
-    const [details, setDetails] = useState({
-            email:"",
-            password:""
-        });
-    const handleSubmit = async (e)=>{
-        e.preventDefault();
-        const host="http://"
-        const response = await fetch(`${host}localhost:5002/api/auth/login`,{
-            method :"POST" ,
-            headers:{
-                 "Content-Type": "application/json"
-            },
-            body:JSON.stringify({email:details.email,password:details.password}),
-        });
-            const json=await response.json();
-            //console.log("json",json);
-            if(json.success){
-                localStorage.setItem('token',json.authtoken);
-                localStorage.setItem('name',json.name);
-                navigate("/");
-                props.showAlert("Successfully logged in","success");
-            }
-            else{
-                props.showAlert("Enter correct credentials","danger");
-            }
-    }
-     const onChange = (e) => {
-        setDetails({ ...details, [e.target.name]: e.target.value });
-    };
-  return (
-    <>
-        <div className='container my-5 px-5'>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <label htmlFor="email" className="form-label">Email address</label>
-                    <input type="email" className="form-control" id="email" value={details.email} name="email" aria-describedby="emailHelp" onChange={onChange} required/>
-                    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="password" className="form-label">Password</label>
-                    <input type="password" className="form-control" name="password" value={details.password} id="password" onChange={onChange} required/>
-                </div>
-                <button type="submit" className="btn btn-primary" >Log In</button>
-            </form>
-        </div>
-    </>
-    
-  )
-}
+import { useState } from "react";
+import noteContext from "./noteContext";
 
-export default Login
+const NoteState = (props) => {
+    const host = process.env.REACT_APP_API_URL;
+    const notesInitial = [];
+
+    const [notes, setNotes] = useState(notesInitial);
+
+    const getnotes = async () => {
+        const url = `${host}/api/notes/fetchallnotes`;
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token"),
+            },
+        });
+        const json = await response.json();
+        //console.log(json);
+        setNotes(json);
+    };
+    const addNote = async (title, description, tag) => {
+        const url = `${host}/api/notes/addnote`;
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token"),
+            },
+            body: JSON.stringify({ title, description, tag }),
+        });
+        const note = await response.json();
+        setNotes(notes.concat(note));
+    };
+
+    const editNote = async (id, title, description, tag) => {
+        const url = `${host}/api/notes/updatenote/${id}`;
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token"),
+            },
+            body: JSON.stringify({ title, description, tag }),
+        });
+        const json = await response.json();
+
+        let newnotes = JSON.parse(JSON.stringify(notes));
+        for (let index = 0; index < newnotes.length; index++) {
+            const element = newnotes[index];
+            if (element._id === id) {
+                newnotes[index].title = title;
+                newnotes[index].description = description;
+                newnotes[index].tag = tag;
+                break;
+            }
+        }
+        setNotes(newnotes);
+    };
+    const deleteNote = async (id) => {
+        //console.log("Deleting the note", id);
+        const url = `${host}/api/notes/deletenote/${id}`;
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "auth-token": localStorage.getItem("token"),
+            },
+        });
+        const json = await response.json();
+
+        const newNote = notes.filter((note) => {
+            return note._id !== id;
+        });
+        setNotes(newNote);
+    };
+    return (
+        <noteContext.Provider
+            value={{ notes, addNote, editNote, deleteNote, getnotes }}
+        >
+            {props.children}
+        </noteContext.Provider>
+    );
+};
+export default NoteState;

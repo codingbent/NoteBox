@@ -9,7 +9,7 @@ const Login = (props) => {
         });
     const handleSubmit = async (e)=>{
         e.preventDefault();
-        const host="http://"
+        const host = "https://NoteBox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
         const response = await fetch(`${host}localhost:5002/api/auth/login`,{
             method :"POST" ,
             headers:{

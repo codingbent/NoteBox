@@ -1,8 +1,8 @@
 const About = () => {
     return (
         <div>
-            <section class="container py-4" aria-labelledby="about-title">
-                <h1 id="about-title" class="mb-3">
+            <section className="container py-4" aria-labelledby="about-title">
+                <h1 id="about-title" className="mb-3">
                     📒 About NoteBox
                 </h1>
                 <p>
@@ -15,8 +15,8 @@ const About = () => {
                     in.
                 </p>
 
-                <h2 class="h5 mt-4">✨ What it does</h2>
-                <ul class="mb-3">
+                <h2 className="h5 mt-4">✨ What it does</h2>
+                <ul className="mb-3">
                     <li>✍️ Add, edit, and delete notes quickly.</li>
                     <li>☁️ Keep notes synced to your account after login.</li>
                     <li>
@@ -24,8 +24,8 @@ const About = () => {
                     </li>
                 </ul>
 
-                <h2 class="h5 mt-4">🔒 Security</h2>
-                <p class="mb-0">
+                <h2 className="h5 mt-4">🔒 Security</h2>
+                <p className="mb-0">
                     Access is gated by authentication. Only logged-in users can
                     create or manage notes. This project was built to practice
                     real-world login and backend integration concepts.

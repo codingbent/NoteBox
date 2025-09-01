@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const mongouri = "mongodb://localhost:27017/inotebook"; // Replace 'inotebook' with your database name
+const mongourl = process.env.MONGO_URL // Replace 'inotebook' with your database name
 
 const connectToMongo = () => {
-  mongoose.connect(mongouri)
+  mongoose.connect(mongourl)
     .then(() => {
       console.log('Connected to MongoDB');
     })

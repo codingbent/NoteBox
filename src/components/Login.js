@@ -10,7 +10,7 @@ const Login = (props) => {
     const handleSubmit = async (e)=>{
         e.preventDefault();
         const host = "https://NoteBox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
-        const response = await fetch(`${host}localhost:5002/api/auth/login`,{
+        const response = await fetch(`${host}/api/auth/login`,{
             method :"POST" ,
             headers:{
                  "Content-Type": "application/json"

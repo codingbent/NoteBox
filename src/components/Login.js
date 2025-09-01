@@ -9,7 +9,8 @@ const Login = (props) => {
         });
     const handleSubmit = async (e)=>{
         e.preventDefault();
-const host = process.env.REACT_APP_API_URL;
+const host = "https://NoteBox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
+
         const response = await fetch(`${host}/api/auth/login`,{
             method :"POST" ,
             headers:{

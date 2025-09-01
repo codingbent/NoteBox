@@ -2,7 +2,8 @@ import { useState } from "react";
 import noteContext from "./noteContext";
 
 const NoteState = (props) => {
-const host = process.env.REACT_APP_API_URL;
+const host = "https://NoteBox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
+
     const notesInitial = [];
 
     const [notes, setNotes] = useState(notesInitial);

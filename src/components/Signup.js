@@ -4,7 +4,8 @@ import {useNavigate} from 'react-router-dom'
 const Signup = (props) => {
   const [credentials,setcredentials]=useState({name:"",email:"",password:"",cpassword:""})
   let navigate=useNavigate();
-const host = process.env.REACT_APP_API_URL;
+const host = "https://NoteBox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
+
   const handleSubmit = async(e)=>{
     e.preventDefault();
     const {name,email,password}=credentials;

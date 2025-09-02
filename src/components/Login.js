@@ -7,29 +7,33 @@ const Login = (props) => {
             email:"",
             password:""
         });
-    const handleSubmit = async (e)=>{
-        e.preventDefault();
-const host = "http://notebox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
+    const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        const response = await fetch(`${host}/api/auth/login`,{
-            method :"POST" ,
-            headers:{
-                 "Content-Type": "application/json"
-            },
-            body:JSON.stringify({email:details.email,password:details.password}),
-        });
-            const json=await response.json();
-            //console.log("json",json);
-            if(json.success){
-                localStorage.setItem('token',json.authtoken);
-                localStorage.setItem('name',json.name);
-                navigate("/");
-                props.showAlert("Successfully logged in","success");
-            }
-            else{
-                props.showAlert("Enter correct credentials","danger");
-            }
+    // No need to define host — Vercel will proxy the request
+    const response = await fetch(`/api/auth/login`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: details.email,
+            password: details.password
+        }),
+    });
+
+    const json = await response.json();
+
+    if (json.success) {
+        localStorage.setItem('token', json.authtoken);
+        localStorage.setItem('name', json.name);
+        navigate("/");
+        props.showAlert("Successfully logged in", "success");
+    } else {
+        props.showAlert("Enter correct credentials", "danger");
     }
+};
+
      const onChange = (e) => {
         setDetails({ ...details, [e.target.name]: e.target.value });
     };

@@ -1,6 +1,3 @@
-import React, { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
-
 const handleSubmit = async (e) => {
     e.preventDefault();
     const { name, email, password } = credentials;
@@ -48,6 +45,5 @@ const handleSubmit = async (e) => {
       </form>
     </div>
   )
-}
 
 export default Signup

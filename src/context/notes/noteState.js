@@ -2,15 +2,13 @@ import { useState } from "react";
 import noteContext from "./noteContext";
 
 const NoteState = (props) => {
-const host = "http://notebox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
-
     const notesInitial = [];
 
     const [notes, setNotes] = useState(notesInitial);
 
+    // fetch all notes
     const getnotes = async () => {
-        const url = `${host}/api/notes/fetchallnotes`;
-        const response = await fetch(url, {
+        const response = await fetch(`/api/notes/fetchallnotes`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -18,12 +16,12 @@ const host = "http://notebox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
             },
         });
         const json = await response.json();
-        //console.log(json);
         setNotes(json);
     };
+
+    // add note
     const addNote = async (title, description, tag) => {
-        const url = `${host}/api/notes/addnote`;
-        const response = await fetch(url, {
+        const response = await fetch(`/api/notes/addnote`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -35,9 +33,9 @@ const host = "http://notebox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
         setNotes(notes.concat(note));
     };
 
+    // edit note
     const editNote = async (id, title, description, tag) => {
-        const url = `${host}/api/notes/updatenote/${id}`;
-        const response = await fetch(url, {
+        await fetch(`/api/notes/updatenote/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -45,12 +43,11 @@ const host = "http://notebox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
             },
             body: JSON.stringify({ title, description, tag }),
         });
-        const json = await response.json();
 
+        // update UI without refetch
         let newnotes = JSON.parse(JSON.stringify(notes));
         for (let index = 0; index < newnotes.length; index++) {
-            const element = newnotes[index];
-            if (element._id === id) {
+            if (newnotes[index]._id === id) {
                 newnotes[index].title = title;
                 newnotes[index].description = description;
                 newnotes[index].tag = tag;
@@ -59,29 +56,26 @@ const host = "http://notebox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
         }
         setNotes(newnotes);
     };
+
+    // delete note
     const deleteNote = async (id) => {
-        //console.log("Deleting the note", id);
-        const url = `${host}/api/notes/deletenote/${id}`;
-        const response = await fetch(url, {
+        await fetch(`/api/notes/deletenote/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 "auth-token": localStorage.getItem("token"),
             },
         });
-        const json = await response.json();
 
-        const newNote = notes.filter((note) => {
-            return note._id !== id;
-        });
+        const newNote = notes.filter((note) => note._id !== id);
         setNotes(newNote);
     };
+
     return (
-        <noteContext.Provider
-            value={{ notes, addNote, editNote, deleteNote, getnotes }}
-        >
+        <noteContext.Provider value={{ notes, addNote, editNote, deleteNote, getnotes }}>
             {props.children}
         </noteContext.Provider>
     );
 };
+
 export default NoteState;

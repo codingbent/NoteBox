@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import {Home} from "./components/Home";
 import About from "./components/About";
-import Description from "./components/Description";
 import Navbar from "./components/Navbar";
 import NoteState from "./context/notes/noteState";
 import Alert from "./components/Alert";
@@ -31,7 +30,6 @@ function App() {
                       <Route path="/about" element={<About />} />
                       <Route path="/login" element={<Login showAlert={showAlert}/>} />
                       <Route path="/signup" element={<Signup showAlert={showAlert}/>} />
-                      <Route path="/description" element={<Description />} />
                   </Routes>
               </BrowserRouter>
           </NoteState>

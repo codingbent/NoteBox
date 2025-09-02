@@ -1,32 +1,27 @@
 import React, { useState } from 'react'
 import {useNavigate} from 'react-router-dom'
 
-const Signup = (props) => {
-  const [credentials,setcredentials]=useState({name:"",email:"",password:"",cpassword:""})
-  let navigate=useNavigate();
-const host = "http://notebox-env.eba-2zkqs3ih.ap-south-1.elasticbeanstalk.com";
-
-  const handleSubmit = async(e)=>{
+const handleSubmit = async (e) => {
     e.preventDefault();
-    const {name,email,password}=credentials;
-    const url=`${host}/api/auth/createuser`
-    const response=await fetch (url,{
-      method:'POST',
-      headers:{
-        "Content-Type":"application/json"
+    const { name, email, password } = credentials;
+
+    const response = await fetch(`/api/auth/createuser`, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
       },
-      body: JSON.stringify({name,email,password})
-    })
-    const json=await response.json();
-    if(json.success){
-      localStorage.setItem('token',json.authtoken);
+      body: JSON.stringify({ name, email, password })
+    });
+
+    const json = await response.json();
+    if (json.success) {
+      localStorage.setItem('token', json.authtoken);
       navigate("/");
-      props.showAlert("Successfully signed up","success")
+      props.showAlert("Successfully signed up", "success");
+    } else {
+      props.showAlert("Invalid Credentials", "danger");
     }
-    else{
-      props.showAlert("Invalid Credentials","danger")
-    }
-  }
+  };
   const onChange=(e)=>{
     setcredentials({...credentials, [e.target.name]: e.target.value})
   }

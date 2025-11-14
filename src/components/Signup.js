@@ -24,7 +24,7 @@ const Signup = (props) => {
     const API_BASE_URL =
         process.env.NODE_ENV === "production"
             ? "https://note-box-backend.onrender.com"
-            : "http://localhost:5001";
+            : "http://localhost:5002";
     try {
       const response = await fetch(`${API_BASE_URL}/api/auth/fetchallservice`, {
         method: "POST",

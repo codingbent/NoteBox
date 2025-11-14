@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import noteContext from "./noteContext";
+import noteContext from "../context/notes/noteContext";
 
 const NoteState = (props) => {
     const [notes, setNotes] = useState([]);

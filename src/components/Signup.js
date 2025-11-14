@@ -21,8 +21,12 @@ const Signup = (props) => {
       return;
     }
 
+    const API_BASE_URL =
+        process.env.NODE_ENV === "production"
+            ? "https://note-box-backend.onrender.com"
+            : "http://localhost:5001";
     try {
-      const response = await fetch(`/api/auth/createuser`, {
+      const response = await fetch(`${API_BASE_URL}/api/auth/fetchallservice`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

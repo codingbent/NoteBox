@@ -11,7 +11,7 @@ const NoteState = (props) => {
         const API_BASE_URL =
             process.env.NODE_ENV === "production"
                 ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5001";
+                : "http://localhost:5002";
         const response = await fetch(
             `${API_BASE_URL}/api/notes/fetchallnotes`,
             {
@@ -31,7 +31,7 @@ const NoteState = (props) => {
         const API_BASE_URL =
             process.env.NODE_ENV === "production"
                 ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5001";
+                : "http://localhost:5002";
         const response = await fetch(`${API_BASE_URL}/api/notes/addnote`, {
             method: "POST",
             headers: {
@@ -49,7 +49,7 @@ const NoteState = (props) => {
         const API_BASE_URL =
             process.env.NODE_ENV === "production"
                 ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5001";
+                : "http://localhost:5002";
         await fetch(`${API_BASE_URL}/api/notes/updatenote/${id}`, {
             method: "PUT",
             headers: {
@@ -77,7 +77,7 @@ const NoteState = (props) => {
         const API_BASE_URL =
             process.env.NODE_ENV === "production"
                 ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5001";
+                : "http://localhost:5002";
         await fetch(`${API_BASE_URL}/api/notes/deletenote/${id}`, {
             method: "DELETE",
             headers: {

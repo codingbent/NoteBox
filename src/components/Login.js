@@ -11,7 +11,7 @@ const Login = (props) => {
         const API_BASE_URL =
             process.env.NODE_ENV === "production"
                 ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5001";
+                : "http://localhost:5002";
         // No need to define host — Vercel will proxy the request
         const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
             method: "POST",

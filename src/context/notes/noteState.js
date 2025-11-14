@@ -6,7 +6,7 @@ const NoteState = (props) => {
 
     // Correct environment detection for Vite
     const API_BASE_URL =
-        import.meta.env.MODE === "production"
+        process.env.NODE_ENV === "production"
             ? "https://note-box-backend.onrender.com"
             : "http://localhost:5002";
 

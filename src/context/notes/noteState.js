@@ -4,9 +4,9 @@ import noteContext from "./noteContext";
 const NoteState = (props) => {
     const [notes, setNotes] = useState([]);
 
-    // Proper env detection
+    // Correct env detection for Vite
     const API_BASE_URL =
-        process.env.NODE_ENV === "production"
+        import.meta.env.MODE === "production"
             ? "https://note-box-backend.onrender.com"
             : "http://localhost:5002";
 
@@ -17,16 +17,13 @@ const NoteState = (props) => {
     // Fetch notes
     const getnotes = async () => {
         try {
-            const response = await fetch(
-                `${API_BASE_URL}/api/notes/fetchallnotes`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "auth-token": localStorage.getItem("token"),
-                    },
-                }
-            );
+            const response = await fetch(`${API_BASE_URL}/api/notes/fetchallnotes`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token"),
+                },
+            });
 
             if (!response.ok) {
                 console.error("Fetch notes failed:", await response.text());
@@ -76,7 +73,9 @@ const NoteState = (props) => {
                 body: JSON.stringify({ title, description, tag }),
             });
 
-            let newNotes = structuredClone(notes);
+            // FIX structuredClone → use JSON deep copy
+            let newNotes = JSON.parse(JSON.stringify(notes));
+
             newNotes = newNotes.map((note) =>
                 note._id === id ? { ...note, title, description, tag } : note
             );
@@ -105,9 +104,7 @@ const NoteState = (props) => {
     };
 
     return (
-        <noteContext.Provider
-            value={{ notes, addNote, editNote, deleteNote, getnotes }}
-        >
+        <noteContext.Provider value={{ notes, addNote, editNote, deleteNote, getnotes }}>
             {props.children}
         </noteContext.Provider>
     );

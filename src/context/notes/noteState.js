@@ -8,20 +8,31 @@ const NoteState = (props) => {
 
     // fetch all notes
     const getnotes = async () => {
-        const response = await fetch(`/api/notes/fetchallnotes`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token"),
-            },
-        });
+        const API_BASE_URL =
+            process.env.NODE_ENV === "production"
+                ? "https://note-box-backend.onrender.com"
+                : "http://localhost:5001";
+        const response = await fetch(
+            `${API_BASE_URL}/api/notes/fetchallnotes`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "auth-token": localStorage.getItem("token"),
+                },
+            }
+        );
         const json = await response.json();
         setNotes(json);
     };
 
     // add note
     const addNote = async (title, description, tag) => {
-        const response = await fetch(`/api/notes/addnote`, {
+        const API_BASE_URL =
+            process.env.NODE_ENV === "production"
+                ? "https://note-box-backend.onrender.com"
+                : "http://localhost:5001";
+        const response = await fetch(`${API_BASE_URL}/api/notes/addnote`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -35,7 +46,11 @@ const NoteState = (props) => {
 
     // edit note
     const editNote = async (id, title, description, tag) => {
-        await fetch(`/api/notes/updatenote/${id}`, {
+        const API_BASE_URL =
+            process.env.NODE_ENV === "production"
+                ? "https://note-box-backend.onrender.com"
+                : "http://localhost:5001";
+        await fetch(`${API_BASE_URL}/api/notes/updatenote/${id}`, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -59,7 +74,11 @@ const NoteState = (props) => {
 
     // delete note
     const deleteNote = async (id) => {
-        await fetch(`/api/notes/deletenote/${id}`, {
+        const API_BASE_URL =
+            process.env.NODE_ENV === "production"
+                ? "https://note-box-backend.onrender.com"
+                : "http://localhost:5001";
+        await fetch(`${API_BASE_URL}/api/notes/deletenote/${id}`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -72,7 +91,9 @@ const NoteState = (props) => {
     };
 
     return (
-        <noteContext.Provider value={{ notes, addNote, editNote, deleteNote, getnotes }}>
+        <noteContext.Provider
+            value={{ notes, addNote, editNote, deleteNote, getnotes }}
+        >
             {props.children}
         </noteContext.Provider>
     );

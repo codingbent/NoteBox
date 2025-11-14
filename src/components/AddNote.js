@@ -1,130 +1,89 @@
-import { useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import noteContext from "../context/notes/noteContext";
 
-const NoteState = (props) => {
-    const [notes, setNotes] = useState([]);
+const AddNote = (props) => {
+    const context = useContext(noteContext);
+    const { addNote } = context;
+    const [note, setNote] = useState({ title: "", description: "", tag: "" });
 
-    // ✅ Safe environment detection for CRA + Vercel (no crash)
-    let API_BASE_URL = "http://localhost:5002"; // default
-
-    if (
-        typeof process !== "undefined" &&
-        process.env &&
-        process.env.NODE_ENV === "production"
-    ) {
-        API_BASE_URL = "https://note-box-backend.onrender.com";
-    }
-
-    // Token log AFTER mount (safe)
-    useEffect(() => {
-        console.log("Token:", localStorage.getItem("token"));
-    }, []);
-
-    // ======================
-    // Fetch All Notes
-    // ======================
-    const getnotes = async () => {
-        try {
-            const response = await fetch(
-                `${API_BASE_URL}/api/notes/fetchallnotes`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "auth-token": localStorage.getItem("token"),
-                    },
-                }
-            );
-
-            if (!response.ok) {
-                console.error("Fetch notes failed:", await response.text());
-                return;
-            }
-
-            const json = await response.json();
-            if (Array.isArray(json)) setNotes(json);
-        } catch (error) {
-            console.error("Error fetching notes:", error);
+    const handleClick = (e) => {
+        if (localStorage.getItem("token") != null) {
+            e.preventDefault();
+            addNote(note.title, note.description, note.tag);
+            setNote({ title: "", description: "", tag: "" });
+            props.showAlert("Added Successfully", "success");
+        } else {
+            alert("Sign in to create a note");
         }
     };
-
-    // ======================
-    // Add Note
-    // ======================
-    const addNote = async (title, description, tag) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/notes/addnote`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "auth-token": localStorage.getItem("token"),
-                },
-                body: JSON.stringify({ title, description, tag }),
-            });
-
-            if (!response.ok) {
-                console.error("Add note failed:", await response.text());
-                return;
-            }
-
-            const note = await response.json();
-            setNotes((prev) => [...prev, note]);
-        } catch (error) {
-            console.error("Error adding note:", error);
-        }
+    const onChange = (e) => {
+        setNote({ ...note, [e.target.name]: e.target.value });
     };
-
-    // ======================
-    // Edit Note
-    // ======================
-    const editNote = async (id, title, description, tag) => {
-        try {
-            await fetch(`${API_BASE_URL}/api/notes/updatenote/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "auth-token": localStorage.getItem("token"),
-                },
-                body: JSON.stringify({ title, description, tag }),
-            });
-
-            let newNotes = JSON.parse(JSON.stringify(notes));
-            newNotes = newNotes.map((note) =>
-                note._id === id ? { ...note, title, description, tag } : note
-            );
-
-            setNotes(newNotes);
-        } catch (error) {
-            console.error("Error editing note:", error);
-        }
-    };
-
-    // ======================
-    // Delete Note
-    // ======================
-    const deleteNote = async (id) => {
-        try {
-            await fetch(`${API_BASE_URL}/api/notes/deletenote/${id}`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                    "auth-token": localStorage.getItem("token"),
-                },
-            });
-
-            setNotes((prev) => prev.filter((note) => note._id !== id));
-        } catch (error) {
-            console.error("Error deleting note:", error);
-        }
-    };
-
     return (
-        <noteContext.Provider
-            value={{ notes, addNote, editNote, deleteNote, getnotes }}
-        >
-            {props.children}
-        </noteContext.Provider>
+        <div className="container my-3">
+            <div className="card shadow-sm p-4 mb-4">
+                <h3 className="mb-3">📝 Add a Note</h3>
+                <form className="container my-3" onSubmit={handleClick}>
+                    <div className="mb-3">
+                        <label htmlFor="title" className="form-label">
+                            Title
+                        </label>
+                        <input
+                            required
+                            value={note.title}
+                            placeholder="Enter your Title here"
+                            type="text"
+                            className="form-control"
+                            id="title"
+                            name="title"
+                            onChange={onChange}
+                            minLength="3"
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="description" className="form-label">
+                            Description
+                        </label>
+                        <textarea
+                            required
+                            value={note.description}
+                            placeholder="Enter your Description here"
+                            type="text"
+                            className="form-control"
+                            id="description"
+                            name="description"
+                            onChange={onChange}
+                            minLength="5"
+                            rows="3"
+                        ></textarea>
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="tag" className="form-label">
+                            Tag
+                        </label>
+                        <input
+                            value={note.tag}
+                            placeholder="Optional"
+                            type="text"
+                            className="form-control"
+                            id="tag"
+                            name="tag"
+                            onChange={onChange}
+                        />
+                    </div>
+                    {localStorage.getItem("token") != null ? (
+                        <button type="submit" className="btn btn-primary">
+                            Add Note
+                        </button>
+                    ) : (
+                        <button type="submit" className="btn btn-primary">
+                            Add Note
+                        </button>
+                    )}
+                </form>
+            </div>
+        </div>
     );
 };
 
-export default NoteState;
+export default AddNote;

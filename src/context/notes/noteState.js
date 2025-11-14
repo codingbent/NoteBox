@@ -28,6 +28,8 @@ const NoteState = (props) => {
 
     // add note
     const addNote = async (title, description, tag) => {
+        console.log(localStorage.getItem("token"));
+        
         const API_BASE_URL =
             process.env.NODE_ENV === "production"
                 ? "https://note-box-backend.onrender.com"

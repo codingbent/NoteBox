@@ -2,94 +2,132 @@ import { useState } from "react";
 import noteContext from "./noteContext";
 
 const NoteState = (props) => {
-    const notesInitial = [];
+    const [notes, setNotes] = useState([]);
 
-    const [notes, setNotes] = useState(notesInitial);
+    // Correct environment detection for Vite
+    const API_BASE_URL =
+        import.meta.env.MODE === "production"
+            ? "https://note-box-backend.onrender.com"
+            : "http://localhost:5002";
 
-    // fetch all notes
+    // ============================
+    // Fetch All Notes
+    // ============================
     const getnotes = async () => {
-        const API_BASE_URL =
-            process.env.NODE_ENV === "production"
-                ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5002";
-        const response = await fetch(
-            `${API_BASE_URL}/api/notes/fetchallnotes`,
-            {
-                method: "GET",
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/notes/fetchallnotes`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "auth-token": localStorage.getItem("token"),
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                console.error("Fetch notes failed:", await response.text());
+                return;
+            }
+
+            const json = await response.json();
+            if (Array.isArray(json)) setNotes(json);
+            else console.error("Expected array but got:", json);
+        } catch (error) {
+            console.error("Error fetching notes:", error);
+        }
+    };
+
+    // ============================
+    // Add Note
+    // ============================
+    const addNote = async (title, description, tag) => {
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/notes/addnote`, {
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "auth-token": localStorage.getItem("token"),
                 },
+                body: JSON.stringify({ title, description, tag }),
+            });
+
+            if (!response.ok) {
+                console.error("Add note failed:", await response.text());
+                return;
             }
-        );
-        const json = await response.json();
-        setNotes(json);
-    };
 
-    // add note
-    const addNote = async (title, description, tag) => {
-        console.log(localStorage.getItem("token"));
-        
-        const API_BASE_URL =
-            process.env.NODE_ENV === "production"
-                ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5002";
-        const response = await fetch(`${API_BASE_URL}/api/notes/addnote`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token"),
-            },
-            body: JSON.stringify({ title, description, tag }),
-        });
-        const note = await response.json();
-        setNotes(prev => [...prev, note]);
-    };
-
-    // edit note
-    const editNote = async (id, title, description, tag) => {
-        const API_BASE_URL =
-            process.env.NODE_ENV === "production"
-                ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5002";
-        await fetch(`${API_BASE_URL}/api/notes/updatenote/${id}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token"),
-            },
-            body: JSON.stringify({ title, description, tag }),
-        });
-
-        // update UI without refetch
-        let newnotes = JSON.parse(JSON.stringify(notes));
-        for (let index = 0; index < newnotes.length; index++) {
-            if (newnotes[index]._id === id) {
-                newnotes[index].title = title;
-                newnotes[index].description = description;
-                newnotes[index].tag = tag;
-                break;
-            }
+            const note = await response.json();
+            setNotes((prev) => [...prev, note]);
+        } catch (error) {
+            console.error("Error adding note:", error);
         }
-        setNotes(newnotes);
     };
 
-    // delete note
-    const deleteNote = async (id) => {
-        const API_BASE_URL =
-            process.env.NODE_ENV === "production"
-                ? "https://note-box-backend.onrender.com"
-                : "http://localhost:5002";
-        await fetch(`${API_BASE_URL}/api/notes/deletenote/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "auth-token": localStorage.getItem("token"),
-            },
-        });
+    // ============================
+    // Edit Note
+    // ============================
+    const editNote = async (id, title, description, tag) => {
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/notes/updatenote/${id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "auth-token": localStorage.getItem("token"),
+                    },
+                    body: JSON.stringify({ title, description, tag }),
+                }
+            );
 
-        const newNote = notes.filter((note) => note._id !== id);
-        setNotes(newNote);
+            if (!response.ok) {
+                console.error("Edit note failed:", await response.text());
+            }
+
+            let newNotes = JSON.parse(JSON.stringify(notes));
+
+            for (let i = 0; i < newNotes.length; i++) {
+                if (newNotes[i]._id === id) {
+                    newNotes[i].title = title;
+                    newNotes[i].description = description;
+                    newNotes[i].tag = tag;
+                    break;
+                }
+            }
+
+            setNotes(newNotes);
+        } catch (error) {
+            console.error("Error editing note:", error);
+        }
+    };
+
+    // ============================
+    // Delete Note
+    // ============================
+    const deleteNote = async (id) => {
+        try {
+            const response = await fetch(
+                `${API_BASE_URL}/api/notes/deletenote/${id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "auth-token": localStorage.getItem("token"),
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                console.error("Delete note failed:", await response.text());
+                return;
+            }
+
+            setNotes((prev) => prev.filter((note) => note._id !== id));
+        } catch (error) {
+            console.error("Error deleting note:", error);
+        }
     };
 
     return (

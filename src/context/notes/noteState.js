@@ -9,7 +9,8 @@ const NoteState = (props) => {
         process.env.NODE_ENV === "production"
             ? "https://note-box-backend.onrender.com"
             : "http://localhost:5002";
-
+            console.log(localStorage.getItem("token"));
+            
     // ============================
     // Fetch All Notes
     // ============================

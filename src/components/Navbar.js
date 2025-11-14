@@ -1,43 +1,54 @@
-import React from "react";
-import { Link, useLocation,useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+
 const Navbar = (props) => {
     let location = useLocation();
-    let navigator=useNavigate();
-    const handlelogout=()=>{
-        localStorage.removeItem('token')
-        localStorage.removeItem('name')
-        localStorage.removeItem('email')
+    let navigator = useNavigate();
+
+    const [token, setToken] = useState(null);
+    const [name, setName] = useState("");
+
+    // Load localStorage ONLY on client
+    useEffect(() => {
+        setToken(localStorage.getItem("token"));
+        setName(localStorage.getItem("name"));
+    }, []);
+
+    const handlelogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("name");
+        localStorage.removeItem("email");
+
+        setToken(null);
+        setName("");
+
         navigator("/login");
-        props.showAlert("Successfully Logged Out","success")
-    }
+        props.showAlert("Successfully Logged Out", "success");
+    };
+
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <div className="container-fluid">
                 <Link className="navbar-brand" to="/">
                     NoteBox
                 </Link>
+
                 <button
                     className="navbar-toggler"
                     type="button"
                     data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent"
-                    aria-expanded="false"
-                    aria-label="Toggle navigation"
                 >
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div
-                    className="collapse navbar-collapse"
-                    id="navbarSupportedContent"
-                >
+
+                <div className="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                         <li className="nav-item">
                             <Link
                                 className={`nav-link ${
-                                    location.pathname === "/"
-                                }?"active":""`}
-                                aria-current="page"
+                                    location.pathname === "/" ? "active" : ""
+                                }`}
                                 to="/"
                             >
                                 Home
@@ -46,37 +57,36 @@ const Navbar = (props) => {
                         <li className="nav-item">
                             <Link
                                 className={`nav-link ${
-                                    location.pathname === "/about"
-                                }?"active":""`}
+                                    location.pathname === "/about" ? "active" : ""
+                                }`}
                                 to="/about"
                             >
                                 About
                             </Link>
                         </li>
                     </ul>
-                    {localStorage.getItem('token')==null
-                    ?
-                    <form className="d-flex">
-                        <Link className="btn btn-primary mx-2" to="/login" role="button">
-                            Login
-                        </Link>
-                        <Link className="btn btn-primary mx-2" to="/signup" role="button">
-                            Sign Up
-                        </Link>
-                    </form>
-                    :
-                    <>
-                       <div className="d-flex align-items-center gap-2">
-                            <span className="text-light fw-semibold">
-                                👤 {localStorage.getItem("name")}
-                            </span>
-                            <button className="btn btn-sm btn-outline-light rounded-pill px-3" onClick={handlelogout}>
+
+                    {/* Conditional UI AFTER hydration-safe state */}
+                    {!token ? (
+                        <form className="d-flex">
+                            <Link className="btn btn-primary mx-2" to="/login">
+                                Login
+                            </Link>
+                            <Link className="btn btn-primary mx-2" to="/signup">
+                                Sign Up
+                            </Link>
+                        </form>
+                    ) : (
+                        <div className="d-flex align-items-center gap-2">
+                            <span className="text-light fw-semibold">👤 {name}</span>
+                            <button
+                                className="btn btn-sm btn-outline-light rounded-pill px-3"
+                                onClick={handlelogout}
+                            >
                                 Logout
                             </button>
                         </div>
-                    </>
-                    
-                    }
+                    )}
                 </div>
             </div>
         </nav>

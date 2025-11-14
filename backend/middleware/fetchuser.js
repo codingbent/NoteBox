@@ -1,5 +1,5 @@
 var jwt=require('jsonwebtoken');
-const JWT_SECRET="abhedagarwal%male";
+const JWT_SECRET="SuperSecretKey98765";
 
 
 const fetchuser = (req,res,next)=>{

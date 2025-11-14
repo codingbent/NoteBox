@@ -4,9 +4,9 @@ import noteContext from "./noteContext";
 const NoteState = (props) => {
     const [notes, setNotes] = useState([]);
 
-    // Correct env detection for Vite
+    // Correct env detection for CRA
     const API_BASE_URL =
-        import.meta.env.MODE === "production"
+        process.env.NODE_ENV === "production"
             ? "https://note-box-backend.onrender.com"
             : "http://localhost:5002";
 
@@ -14,16 +14,18 @@ const NoteState = (props) => {
         console.log("Token:", localStorage.getItem("token"));
     }, []);
 
-    // Fetch notes
     const getnotes = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/notes/fetchallnotes`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    "auth-token": localStorage.getItem("token"),
-                },
-            });
+            const response = await fetch(
+                `${API_BASE_URL}/api/notes/fetchallnotes`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "auth-token": localStorage.getItem("token"),
+                    },
+                }
+            );
 
             if (!response.ok) {
                 console.error("Fetch notes failed:", await response.text());
@@ -37,7 +39,6 @@ const NoteState = (props) => {
         }
     };
 
-    // Add Note
     const addNote = async (title, description, tag) => {
         try {
             const response = await fetch(`${API_BASE_URL}/api/notes/addnote`, {
@@ -61,7 +62,6 @@ const NoteState = (props) => {
         }
     };
 
-    // Edit Note
     const editNote = async (id, title, description, tag) => {
         try {
             await fetch(`${API_BASE_URL}/api/notes/updatenote/${id}`, {
@@ -73,9 +73,7 @@ const NoteState = (props) => {
                 body: JSON.stringify({ title, description, tag }),
             });
 
-            // FIX structuredClone → use JSON deep copy
             let newNotes = JSON.parse(JSON.stringify(notes));
-
             newNotes = newNotes.map((note) =>
                 note._id === id ? { ...note, title, description, tag } : note
             );
@@ -86,7 +84,6 @@ const NoteState = (props) => {
         }
     };
 
-    // Delete Note
     const deleteNote = async (id) => {
         try {
             await fetch(`${API_BASE_URL}/api/notes/deletenote/${id}`, {
@@ -104,7 +101,9 @@ const NoteState = (props) => {
     };
 
     return (
-        <noteContext.Provider value={{ notes, addNote, editNote, deleteNote, getnotes }}>
+        <noteContext.Provider
+            value={{ notes, addNote, editNote, deleteNote, getnotes }}
+        >
             {props.children}
         </noteContext.Provider>
     );

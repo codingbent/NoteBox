@@ -10,9 +10,9 @@ const NoteState = (props) => {
             ? "https://note-box-backend.onrender.com"
             : "http://localhost:5002";
 
-    // useEffect(() => {
-    //     console.log("Token:", localStorage.getItem("token"));
-    // }, []);
+    useEffect(() => {
+        console.log("Token:", localStorage.getItem("token"));
+    }, []);
 
     const getnotes = async () => {
         try {

@@ -14,7 +14,10 @@ const Signup = (props) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const { name, email, password, cpassword } = credentials;
-
+        if(password.length<8||cpassword.length<8){
+            props.showAlert("Password must be 8 characters long","danger");
+            return;
+        }
         // check passwords match
         if (password !== cpassword) {
             props.showAlert("Passwords do not match", "danger");

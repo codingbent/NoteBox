@@ -11,11 +11,14 @@ var fetchuser = require("../middleware/fetchuser");
 router.post(
     "/createuser",
     [
-        body("name").isLength({ min: 3 }),
-        body("password").isLength({ min: 8 }),
-        body("email").isEmail(),
+        body("name", "Name must be at least 3 characters").isLength({ min: 3 }),
+        body("email", "Enter a valid email").isEmail(),
+        body("password", "Password must be at least 8 characters").isLength({
+            min: 8,
+        }),
     ],
     async (req, res) => {
+        console.log(req.body);
         var success = false;
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -48,9 +51,12 @@ router.post(
             res.json({ success, authtoken });
         } catch (error) {
             console.error(error.message);
-            res.status(500).json(success, "Internal server error");
+            res.status(500).json({
+                success: false,
+                error: "Internal server error",
+            });
         }
-    }
+    },
 );
 //CREATE A USER USING : POST "/API/AUTH" Doesn't require auth
 
@@ -79,18 +85,16 @@ router.post(
             }
             const passwordcompare = await bcrypt.compare(
                 password,
-                user.password
+                user.password,
             );
             //console.log(passwordcompare);
 
             if (!passwordcompare) {
                 success = false;
-                return res
-                    .status(400)
-                    .json({
-                        success,
-                        error: "Sorry Enter correct credentials",
-                    });
+                return res.status(400).json({
+                    success,
+                    error: "Sorry Enter correct credentials",
+                });
             }
             const payload = {
                 user: {
@@ -111,7 +115,7 @@ router.post(
 
             res.status(500).send("Internal server error");
         }
-    }
+    },
 );
 //ROUTE 3: Get logged in details using POST"/api/auth/"
 router.post("/getuser", fetchuser, async (req, res) => {

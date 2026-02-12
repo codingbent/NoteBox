@@ -30,6 +30,7 @@ const Login = (props) => {
             localStorage.setItem("token", json.authtoken);
             localStorage.setItem("name", json.name);
             navigate("/");
+            window.location.reload();
             props.showAlert("Successfully logged in", "success");
         } else {
             props.showAlert("Enter correct credentials", "danger");
